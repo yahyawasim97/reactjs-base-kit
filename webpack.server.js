@@ -5,6 +5,8 @@
  * @author: Manish Budhiraja
  */
 
+/* eslint-disable import/no-extraneous-dependencies */
+
 const path = require('path');
 const NodeExternals = require('webpack-node-externals'); //eslint-disable-line
 

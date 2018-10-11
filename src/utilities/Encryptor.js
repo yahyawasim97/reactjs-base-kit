@@ -7,6 +7,6 @@
 
 import createEncryptor from 'redux-persist-transform-encrypt';
 
-const encryptor = createEncryptor({ secretKey: 'reactjs-base-kit' });
+const Encryptor = createEncryptor({ secretKey: 'reactjs-base-kit' });
 
-export default encryptor;
+export default Encryptor;

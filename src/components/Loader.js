@@ -11,17 +11,13 @@ import { bool } from 'prop-types';
 import { createPortal } from 'react-dom';
 import { connect } from 'react-redux';
 
-const Loader = ({ loading }) => (
-  <div>
-    {loading &&
-      createPortal(
-        <div className="base-kit-loader">
-          <ReactLoader active={true} type="pacman" />
-        </div>,
-        document.body
-      )}
-  </div>
-);
+const Loader = ({ loading }) =>
+  createPortal(
+    <div className={!loading ? '' : 'base-kit-loader'}>
+      <ReactLoader active={true} type="pacman" />
+    </div>,
+    document.body
+  );
 
 Loader.propTypes = { loading: bool.isRequired };
 

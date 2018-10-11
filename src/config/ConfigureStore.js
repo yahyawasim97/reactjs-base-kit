@@ -12,17 +12,19 @@ import { connectRouter, routerMiddleware as createRouterMiddleware } from 'conne
 import rootReducer from '../reducers';
 import sagas from '../sagas';
 
-const ConfigureStore = (history) => {
+const ConfigureStore = ({
+  history, preloadedState,
+}) => {
   const sagaMiddleware = createSagaMiddleware();
   const routerMiddleware = createRouterMiddleware(history);
   const reducers = connectRouter(history)(rootReducer);
-  const store = createStore(reducers, applyMiddleware(routerMiddleware, sagaMiddleware));
-  const persistor = persistStore(store);
+  const store = createStore(reducers, preloadedState, applyMiddleware(routerMiddleware, sagaMiddleware));
+  const persister = persistStore(store);
 
   sagaMiddleware.run(sagas);
 
   return {
-    persistor,
+    persister,
     store,
   };
 };

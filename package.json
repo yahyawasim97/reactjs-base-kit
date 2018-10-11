@@ -5,11 +5,25 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --config webpack.client.js --mode production && webpack --config webpack.server.js --mode production",
+    "precommit": "lint-staged",
     "serve": "node build/bundle.js",
     "start": "npm-run-all --parallel webpack:*",
+    "test": "npm-run-all --silent test:",
+    "test:lint": "./node_modules/.bin/eslint . --ext .js",
     "webpack:server": "webpack --config webpack.server.js --watch --mode development",
     "webpack:client": "webpack --config webpack.client.js --watch --mode development",
     "webpack:start": "nodemon --watch build node build/bundle.js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "npm run test:lint",
+      "git add ."
+    ]
   },
   "keywords": [],
   "author": "",
@@ -19,6 +33,7 @@
     "body-parser": "^1.18.3",
     "connected-react-router": "^4.4.1",
     "express": "^4.16.3",
+    "history": "^4.7.2",
     "idx": "^2.4.0",
     "prop-types": "^15.6.2",
     "querystring": "^0.2.0",
@@ -34,6 +49,7 @@
     "redux-persist": "^5.10.0",
     "redux-persist-transform-encrypt": "^2.0.1",
     "redux-saga": "^0.16.0",
+    "redux-saga-routines": "^3.1.1",
     "socket.io-client": "^2.1.1"
   },
   "devDependencies": {
@@ -60,6 +76,8 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
     "html-webpack-plugin": "^3.2.0",
+    "husky": "^1.1.2",
+    "lint-staged": "^7.3.0",
     "mini-css-extract-plugin": "^0.4.3",
     "node-sass": "^4.9.3",
     "nodemon": "^1.18.4",

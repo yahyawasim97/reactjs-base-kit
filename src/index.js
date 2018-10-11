@@ -7,6 +7,6 @@
 
 import React from 'react';
 import { hydrate } from 'react-dom';
-import { BrowserRoutes } from './Routes';
+import App from './App';
 
-hydrate(<BrowserRoutes />, document.querySelector('#app'));
+hydrate(<App />, document.querySelector('#app'));

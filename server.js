@@ -11,38 +11,41 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import bodyParser from 'body-parser';
 import { Helmet } from 'react-helmet';
-import { ServerRoutes } from './src/Routes';
+import { Provider } from 'react-redux';
+import Template from './HtmlTemplate';
+import { ServerRoutes } from './src/config/Routes';
+import configureStore from './src/config/ConfigureStore';
 
 const server = express();
 const PORT = process.env.PORT || 3000;
 
-server.use(bodyParser.json());
-server.use(express.static('build/public'));
-
-server.get('*', (req, res) => {
+const handleRender = (req, res) => {
+  const { store } = configureStore({
+    history: {},
+    preloadedState: {},
+  });
   const props = {
     context: {},
     req,
   };
   const helmet = Helmet.renderStatic();
-  const content = renderToString(<ServerRoutes {...props} />);
 
-  const html = `
-  <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-      ${helmet.meta}
-      ${helmet.title}
-    </head>
-    <body>
-      <div id="app">${content}</div>
-      <script src="client_bundle.js"></script>
-    </body>
-  </html>
-  `;
+  const content = renderToString(<Provider store={store}>
+    <ServerRoutes {...props} />
+  </Provider>);
+
+  const preloadedState = store.getState();
+
+  const html = Template({
+    content,
+    helmet,
+    preloadedState,
+  });
 
   res.send(html);
-});
+};
 
-server.listen(PORT, () => console.log(`Server started @ ${PORT}`));
+server.use(bodyParser.json());
+server.use(express.static('build/public'));
+server.get('*', handleRender);
+server.listen(PORT);

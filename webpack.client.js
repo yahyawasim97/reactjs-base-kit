@@ -12,14 +12,10 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CleanPlugin = require('clean-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-// const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const pkg = require('./package.json');
 
-// const VERSION = pkg.version;
-// const NAME = pkg.name;
-const isDevlopment = process.env.NODE_ENV !== 'production';
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const getPlugins = () => {
   const plugins = [
@@ -27,16 +23,16 @@ const getPlugins = () => {
       root: path.resolve('./'),
       verbose: true,
     }),
+    new MiniCssExtractPlugin({
+      chunkFilename: isDevelopment ? '[id].css' : '[id].[hash].css',
+      filename: isDevelopment ? '[name].css' : '[name].[hash].css',
+    }),
     new BundleAnalyzerPlugin({
       analyzerMode: 'static',
       defaultSizes: 'gzip',
-      openAnalyzer: !isDevlopment,
+      openAnalyzer: !isDevelopment,
     }),
     new webpack.EnvironmentPlugin({ NODE_ENV: 'development' }),
-    new MiniCssExtractPlugin({
-      chunkFilename: isDevlopment ? '[id].css' : '[id].[hash].css',
-      filename: isDevlopment ? '[name].css' : '[name].[hash].css',
-    }),
   ];
 
   if (process.env.NODE_ENV === 'production') {
@@ -54,7 +50,7 @@ const getPlugins = () => {
 };
 
 module.exports = {
-  entry: ['./src/index.js', './styles/index.scss'],
+  entry: ['babel-polyfill', './src/index.js', './styles/index.scss'],
   module: {
     rules: [
       {
@@ -63,16 +59,9 @@ module.exports = {
         options: { presets: [['env', { modules: false }], 'es2015', 'es2017', 'stage-0', 'react'] },
         test: /\.(js|jsx)$/,
       },
-      // {
-      //   test: /\.scss$/,
-      //   use: ExtractTextPlugin.extract({
-      //     fallback: 'style-loader',
-      //     use: ['css-loader', 'resolve-url-loader', 'sass-loader?sourceMap'],
-      //   }),
-      // },
       {
         test: /\.(sa|sc|c)ss$/,
-        use: [isDevlopment ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader?sourceMap'],
+        use: [isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader?sourceMap'],
       },
       {
         loader: 'url-loader?limit=100000',

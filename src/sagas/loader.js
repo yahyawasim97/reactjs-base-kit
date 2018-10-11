@@ -5,16 +5,19 @@
  * @author: Manish Budhiraja
  */
 
-import { put, takeLatest } from 'redux-saga/effects';
+import { call, takeLatest, put } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
+
 import { USER_LOGIN } from '../actions/user-actions-types';
 import { showLoader } from '../actions/app-action-types';
 
-function* showLoaderHanlder() {
+export function* showLoaderHandler() {
+  yield call(delay, 5000);
   yield put(showLoader());
 }
 
 function* loader() {
-  yield [takeLatest(USER_LOGIN, showLoaderHanlder)];
+  yield takeLatest(USER_LOGIN, showLoaderHandler);
 }
 
 export default loader;

@@ -9,7 +9,7 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
 export default ({
-  component, layout: Layout, type = 'private', auhtHandler, to = '/signin', store, ...rest
+  component, layout: Layout, type = 'private', authHandler, to = '/signin', store, ...rest
 }) => (
   <Route
     {...rest}
@@ -17,7 +17,7 @@ export default ({
       if (type === 'public') {
         return <Layout component={component} {...props} />;
       }
-      if (type === 'private' && auhtHandler(store)) {
+      if (type === 'private' && authHandler(store)) {
         return <Layout component={component} {...props} />;
       }
 
